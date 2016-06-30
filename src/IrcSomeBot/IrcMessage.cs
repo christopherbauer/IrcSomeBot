@@ -11,7 +11,12 @@ namespace IrcSomeBot
             var protocolParts = inputParts[0].Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
             var logonDetails = protocolParts[0].Split(new [] {"!"},StringSplitOptions.RemoveEmptyEntries);
             var messageType = protocolParts[1];
-            var target = protocolParts[2];
+            string target = null;
+            if (protocolParts.Length == 3)
+            {
+                target = protocolParts[2];
+            }
+
             string username = null, gateway;
             if (logonDetails.Length == 1)
             {
@@ -19,7 +24,7 @@ namespace IrcSomeBot
             }
             else
             {
-                username = logonDetails[0];
+                username = logonDetails[0].Substring(1);
                 gateway = logonDetails[1];
             }
             return new IrcMessage(username, gateway, target, message);

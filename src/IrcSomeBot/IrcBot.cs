@@ -31,9 +31,10 @@ namespace IrcSomeBot
 
         public void Initialize()
         {
+            string inputLine = null;
+
             try
             {
-
                 var irc = new TcpClient(_server, _port);
                 var stream = irc.GetStream();
                 var reader = new StreamReader(stream);
@@ -49,7 +50,6 @@ namespace IrcSomeBot
                 Writer.Flush();
                 while (true)
                 {
-                    string inputLine;
                     while ((inputLine = reader.ReadLine()) != null)
                     {
                         Debug.WriteLine(inputLine);
@@ -90,6 +90,7 @@ namespace IrcSomeBot
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                Console.WriteLine("Source: {0}",inputLine);
                 Initialize();
             }
         }
