@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2B68D551-095A-4FB0-A749-AAF016F9CE51}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0D0107DC-09C2-4E94-A7D7-13A12D9FA327}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IrcSomeBot", "src\IrcSomeBot\IrcSomeBot.csproj", "{8BB0ACC9-7258-48E8-867C-2F47E9C8D939}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8BB0ACC9-7258-48E8-867C-2F47E9C8D939}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BB0ACC9-7258-48E8-867C-2F47E9C8D939}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BB0ACC9-7258-48E8-867C-2F47E9C8D939}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BB0ACC9-7258-48E8-867C-2F47E9C8D939}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8BB0ACC9-7258-48E8-867C-2F47E9C8D939} = {2B68D551-095A-4FB0-A749-AAF016F9CE51}
+	EndGlobalSection
+EndGlobal
