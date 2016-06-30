@@ -7,7 +7,11 @@ namespace IrcSomeBot
         public static IrcMessage ParseInput(string inputLine)
         {
             var inputParts = inputLine.Split(new[] {" :"}, StringSplitOptions.RemoveEmptyEntries);
-            var message = inputParts[1];
+            string message = null;
+            if (inputParts.Length == 2)
+            {
+                message = inputParts[1];
+            }
             var protocolParts = inputParts[0].Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
             var logonDetails = protocolParts[0].Split(new [] {"!"},StringSplitOptions.RemoveEmptyEntries);
             var messageType = protocolParts[1];
