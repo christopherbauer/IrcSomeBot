@@ -31,50 +31,66 @@ namespace IrcSomeBot
 
         public void Initialize()
         {
-            var irc = new TcpClient(_server, _port);
-            var stream = irc.GetStream();
-            var reader = new StreamReader(stream);
-            Writer = new StreamWriter(stream);
-            // Start PingSender thread
-            var ping = new PingSender(_server);
-            ping.Start();
-            Writer.WriteLine(User);
-            Writer.Flush();
-            Writer.WriteLine("NICK " + _username);
-            Writer.Flush();
-            Writer.WriteLine("JOIN " + _channel);
-            Writer.Flush();
-            while (true)
+            try
             {
-                string inputLine;
-                while ((inputLine = reader.ReadLine()) != null)
+
+                var irc = new TcpClient(_server, _port);
+                var stream = irc.GetStream();
+                var reader = new StreamReader(stream);
+                Writer = new StreamWriter(stream);
+                // Start PingSender thread
+                var ping = new PingSender(_server);
+                ping.Start();
+                Writer.WriteLine(User);
+                Writer.Flush();
+                Writer.WriteLine("NICK " + _username);
+                Writer.Flush();
+                Writer.WriteLine("JOIN " + _channel);
+                Writer.Flush();
+                while (true)
                 {
-                    Debug.WriteLine(inputLine);
-                    var garbage = inputLine.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
-                    if (garbage.Length > 1)
+                    string inputLine;
+                    while ((inputLine = reader.ReadLine()) != null)
                     {
-                        var parsedLine = garbage[1];
-                        foreach (var responder in _responders)
+                        Debug.WriteLine(inputLine);
+                        var garbage = inputLine.Split(new[] {":"}, StringSplitOptions.RemoveEmptyEntries);
+                        if (garbage.Length > 1)
                         {
-                            if (responder.HasResponse(parsedLine))
+                            var ircMessage = IrcMessage.ParseInput(inputLine);
+                            var @private = ircMessage.Target == _username;
+
+                            foreach (var responder in _responders)
                             {
-                                var responses = responder.GetResponse(parsedLine);
-                                if (responses != null)
+                                if (responder.HasResponse(ircMessage.Message))
                                 {
-                                    foreach (var response in responses)
+                                    var responses = responder.GetResponse(ircMessage.Message);
+                                    if (responses != null)
                                     {
-                                        Writer.WriteLine("PRIVMSG {0} :{1}", _channel, response);
+                                        foreach (var response in responses)
+                                        {
+                                            var ircResponse = string.Format("PRIVMSG {0} :{1}",
+                                                @private ? ircMessage.Sender : _channel,
+                                                response);
+                                            Console.WriteLine("Input: {0}", inputLine);
+                                            Console.WriteLine("Response: {0}", ircResponse);
+                                            Writer.WriteLine(ircResponse);
+                                        }
+                                        Writer.Flush();
                                     }
-                                    Writer.Flush();
                                 }
                             }
                         }
                     }
+                    // Close all streams
+                    Writer.Close();
+                    reader.Close();
+                    irc.Close();
                 }
-                // Close all streams
-                Writer.Close();
-                reader.Close();
-                irc.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                Initialize();
             }
         }
 
