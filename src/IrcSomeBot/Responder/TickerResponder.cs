@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace IrcSomeBot.Responder
 {
@@ -20,9 +21,9 @@ namespace IrcSomeBot.Responder
             _tickerTracker = new Dictionary<TickerTrackerRecord, DateTime>();
         }
 
-        public bool HasResponse(string inputLine)
+        public bool HasResponse(IrcMessage ircMessage)
         {
-            return inputLine.StartsWith(",");
+            return ircMessage.Message != null && ircMessage.Message.StartsWith(",");
         }
 
         public List<string> GetResponse(IrcMessage ircMessage)
@@ -36,21 +37,37 @@ namespace IrcSomeBot.Responder
             else
             {
                 var requestTime = DateTime.Now;
-                var tickerTrackerRecord = new TickerTrackerRecord(ticker, ircMessage.Target == _username ? ircMessage.Sender : _channel);
+                
+                var @private = ircMessage.Target == _username;
+                var tickerTrackerRecord = new TickerTrackerRecord(ticker, @private ? ircMessage.Sender : _channel);
+                var requestDifference = new TimeSpan();
+                var repeat = false;
                 if (_tickerTracker.ContainsKey(tickerTrackerRecord))
                 {
-                    if (requestTime.Subtract(_tickerTracker[tickerTrackerRecord]) < _norepeat)
+                    requestDifference = requestTime.Subtract(_tickerTracker[tickerTrackerRecord]);
+                    repeat = requestDifference < _norepeat;
+
+                    if (!repeat)
                     {
-                        return null;
+                       _tickerTracker[tickerTrackerRecord] = requestTime;
                     }
-                    _tickerTracker[tickerTrackerRecord] = requestTime;
                 }
                 else
                 {
                     _tickerTracker.Add(tickerTrackerRecord, requestTime);
                 }
-                
-                responses.AddRange(_stockTickerDataSource.GetPricingData(ticker, requestTime));
+
+                foreach (var pricingData in _stockTickerDataSource.GetPricingData(ticker, requestTime))
+                {
+                    if (repeat)
+                    {
+                        responses.Add(string.Format(@"PRIVMSG {0} : I am configured to only post tickers every {3:mm\:ss}. Ticker was requested {1:mm\:ss} ago. Please wait {2:mm\:ss} before requesting again.", ircMessage.Sender, requestDifference, _norepeat.Subtract(requestDifference), _norepeat));
+                    }
+                    else
+                    {
+                        responses.Add(string.Format(@"PRIVMSG {0} :{1}", @private ? ircMessage.Sender : _channel, pricingData));
+                    }
+                }
             }
             return responses;
         }

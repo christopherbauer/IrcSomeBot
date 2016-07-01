@@ -4,18 +4,18 @@ namespace IrcSomeBot.Responder.YahooFinancial
     {
         public string Symbol { get; set; }
         public string Name { get; set; }
-        public decimal Bid { get; set; }
-        public decimal Ask { get; set; }
-        public decimal Open { get; set; }
-        public decimal PreviousClose { get; set; }
-        public decimal Change { get; set; }
+        public string Bid { get; set; }
+        public string Ask { get; set; }
+        public string Open { get; set; }
+        public string PreviousClose { get; set; }
+        public string Change { get; set; }
         public string PercentChange { get; set; }
-        public decimal DayLow { get; set; }
-        public decimal DayHigh { get; set; }
+        public string DayLow { get; set; }
+        public string DayHigh { get; set; }
         public string AfterHoursChange { get; set; }
-        public decimal Volume { get; set; }
+        public string Volume { get; set; }
         public string PE { get; set; }
         public string WeekRange52 { get; set; }
-        public decimal LastTradePrice { get; set; }
+        public string LastTradePrice { get; set; }
     }
 }

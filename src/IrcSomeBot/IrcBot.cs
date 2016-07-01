@@ -32,9 +32,10 @@ namespace IrcSomeBot
         public void Initialize()
         {
             string inputLine = null;
-
+#if !DEBUG
             try
             {
+#endif
                 var irc = new TcpClient(_server, _port);
                 var stream = irc.GetStream();
                 var reader = new StreamReader(stream);
@@ -57,23 +58,19 @@ namespace IrcSomeBot
                         if (garbage.Length > 1)
                         {
                             var ircMessage = IrcMessage.ParseInput(inputLine);
-                            var @private = ircMessage.Target == _username;
 
                             foreach (var responder in _responders)
                             {
-                                if (responder.HasResponse(ircMessage.Message))
+                                if (responder.HasResponse(ircMessage))
                                 {
                                     var responses = responder.GetResponse(ircMessage);
                                     if (responses != null)
                                     {
                                         foreach (var response in responses)
                                         {
-                                            var ircResponse = string.Format("PRIVMSG {0} :{1}",
-                                                @private ? ircMessage.Sender : _channel,
-                                                response);
                                             Console.WriteLine("Input: {0}", inputLine);
-                                            Console.WriteLine("Response: {0}", ircResponse);
-                                            Writer.WriteLine(ircResponse);
+                                            Console.WriteLine("Response: {0}", response);
+                                            Writer.WriteLine(response);
                                         }
                                         Writer.Flush();
                                     }
@@ -86,6 +83,7 @@ namespace IrcSomeBot
                     reader.Close();
                     irc.Close();
                 }
+#if !DEBUG
             }
             catch (Exception ex)
             {
@@ -93,6 +91,7 @@ namespace IrcSomeBot
                 Console.WriteLine("Source: {0}",inputLine);
                 Initialize();
             }
+#endif
         }
 
         public void LoadResponder(IResponder responder)

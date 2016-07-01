@@ -11,14 +11,14 @@ namespace IrcSomeBot.Responder.YahooFinancial
 
             foreach (var yahooFinanceApiData in pricing)
             {
-                if (yahooFinanceApiData.Symbol.Equals("N/A", StringComparison.CurrentCultureIgnoreCase))
+                if (yahooFinanceApiData.Name.Equals("N/A", StringComparison.CurrentCultureIgnoreCase))
                 {
                     yield return "Ticker not found!";
                 }
                 else
                 {
                     yield return
-                        string.Format("{0} ({1}) - {2:HH:mm:ss tt} - {3:C} ({4}) | Op: {5:C} | Lo-Hi {6:C}-{7:C}",
+                        string.Format("{0} ({1}) - {2:HH:mm:ss tt} - {3} ({4}) | Op: {5} | Lo-Hi {6}-{7}",
                             yahooFinanceApiData.Name,
                             ticker.ToUpper(),
                             requestTime,

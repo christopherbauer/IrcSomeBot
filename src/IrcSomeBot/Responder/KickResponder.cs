@@ -13,9 +13,9 @@ namespace IrcSomeBot.Responder
             _channel = channel;
         }
 
-        public bool HasResponse(string inputLine)
+        public bool HasResponse(IrcMessage ircMessage)
         {
-            return (inputLine.Contains("KICK") && inputLine.Contains(_username));
+            return ircMessage.Message.Contains("KICK") && ircMessage.Message.Contains(_username);
         }
 
         public List<string> GetResponse(IrcMessage ircMessage)
