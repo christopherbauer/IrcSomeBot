@@ -18,7 +18,7 @@ namespace IrcSomeBot.Responder
             return (inputLine.Contains("KICK") && inputLine.Contains(_username));
         }
 
-        public List<string> GetResponse(string inputLine)
+        public List<string> GetResponse(IrcMessage ircMessage)
         {
             return new List<string> {string.Format("/j {0}", _channel)};
         }

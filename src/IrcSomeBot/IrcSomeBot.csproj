@@ -72,18 +72,19 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Responder\IResponder.cs" />
+    <Compile Include="Responder\IStockTickerDataSource.cs" />
     <Compile Include="Responder\KickResponder.cs" />
     <Compile Include="Responder\TickerResponder.cs" />
-    <Compile Include="Responder\YahooFinanceApi.cs" />
-    <Compile Include="Responder\YahooFinanceApiData.cs" />
+    <Compile Include="Responder\TickerTrackerRecord.cs" />
+    <Compile Include="Responder\YahooFinancial\YahooApiDatasource.cs" />
+    <Compile Include="Responder\YahooFinancial\YahooFinanceApi.cs" />
+    <Compile Include="Responder\YahooFinancial\YahooFinanceApiData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
       <Visible>False</Visible>

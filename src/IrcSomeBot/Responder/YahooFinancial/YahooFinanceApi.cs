@@ -4,11 +4,11 @@ using System.Net;
 using CsvHelper;
 using CsvHelper.Configuration;
 
-namespace IrcSomeBot.Responder
+namespace IrcSomeBot.Responder.YahooFinancial
 {
     public static class YahooFinanceApi
     {
-        private static string apiUrl = "http://finance.yahoo.com/d/quotes.csv?s={0}&f={1}";
+        private static string _apiUrl = "http://finance.yahoo.com/d/quotes.csv?s={0}&f={1}";
 
         public static List<YahooFinanceApiData> Request(string[] tickers)
         {

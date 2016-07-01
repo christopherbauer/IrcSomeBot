@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using IrcSomeBot.Responder;
+using IrcSomeBot.Responder.YahooFinancial;
 
 namespace IrcSomeBot
 {
@@ -17,7 +18,7 @@ namespace IrcSomeBot
             var username = reader.GetValue("username", typeof(string)).ToString();
 
             var bot = new IrcBot(server, port, channel, username);
-            bot.LoadResponder(new TickerResponder(TimeSpan.FromSeconds(30)));
+            bot.LoadResponder(new TickerResponder(new YahooApiDatasource(), TimeSpan.FromSeconds(30), username, channel));
             bot.LoadResponder(new KickResponder(username, channel));
             bot.Initialize();
         }

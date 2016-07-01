@@ -1,4 +1,4 @@
-namespace IrcSomeBot.Responder
+namespace IrcSomeBot.Responder.YahooFinancial
 {
     public class YahooFinanceApiData
     {

@@ -5,13 +5,19 @@ namespace IrcSomeBot.Responder
 {
     public class TickerResponder : IResponder
     {
-        private readonly Dictionary<string, DateTime> _tickerTracker;
+        private readonly IStockTickerDataSource _stockTickerDataSource;
+        private readonly Dictionary<TickerTrackerRecord, DateTime> _tickerTracker;
         private readonly TimeSpan _norepeat;
+        private readonly string _username;
+        private readonly string _channel;
 
-        public TickerResponder(TimeSpan norepeat)
+        public TickerResponder(IStockTickerDataSource stockTickerDataSource, TimeSpan norepeat, string username, string channel)
         {
+            _stockTickerDataSource = stockTickerDataSource;
             _norepeat = norepeat;
-            _tickerTracker = new Dictionary<string, DateTime>();
+            _username = username;
+            _channel = channel;
+            _tickerTracker = new Dictionary<TickerTrackerRecord, DateTime>();
         }
 
         public bool HasResponse(string inputLine)
@@ -19,9 +25,9 @@ namespace IrcSomeBot.Responder
             return inputLine.StartsWith(",");
         }
 
-        public List<string> GetResponse(string inputLine)
+        public List<string> GetResponse(IrcMessage ircMessage)
         {
-            var ticker = inputLine.Substring(1);
+            var ticker = ircMessage.Message.Substring(1);
             var responses = new List<string>();
             if (string.IsNullOrWhiteSpace(ticker))
             {
@@ -30,41 +36,21 @@ namespace IrcSomeBot.Responder
             else
             {
                 var requestTime = DateTime.Now;
-                if (_tickerTracker.ContainsKey(ticker))
+                var tickerTrackerRecord = new TickerTrackerRecord(ticker, ircMessage.Target == _username ? ircMessage.Sender : _channel);
+                if (_tickerTracker.ContainsKey(tickerTrackerRecord))
                 {
-                    if (requestTime.Subtract(_tickerTracker[ticker]) < _norepeat)
+                    if (requestTime.Subtract(_tickerTracker[tickerTrackerRecord]) < _norepeat)
                     {
                         return null;
                     }
-                    _tickerTracker[ticker] = requestTime;
+                    _tickerTracker[tickerTrackerRecord] = requestTime;
                 }
                 else
                 {
-                    _tickerTracker.Add(ticker, requestTime);
+                    _tickerTracker.Add(tickerTrackerRecord, requestTime);
                 }
-                var pricing = YahooFinanceApi.Request(new[] { ticker });
-
-                foreach (var yahooFinanceApiData in pricing)
-                {
-                    if (yahooFinanceApiData.Symbol.Equals("N/A", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        responses.Add("Ticker not found!");
-                    }
-                    else
-                    {
-                        responses.Add(
-                            string.Format("{0} ({1}) - {2:HH:mm:ss tt} - {3:C} ({4}) | Op: {5:C} | Lo-Hi {6:C}-{7:C}",
-                                yahooFinanceApiData.Name,
-                                ticker.ToUpper(),
-                                requestTime,
-                                yahooFinanceApiData.LastTradePrice,
-                                yahooFinanceApiData.PercentChange,
-                                yahooFinanceApiData.Open,
-                                yahooFinanceApiData.DayLow,
-                                yahooFinanceApiData.DayHigh
-                                ));
-                    }
-                }
+                
+                responses.AddRange(_stockTickerDataSource.GetPricingData(ticker, requestTime));
             }
             return responses;
         }

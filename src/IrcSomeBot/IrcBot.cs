@@ -63,7 +63,7 @@ namespace IrcSomeBot
                             {
                                 if (responder.HasResponse(ircMessage.Message))
                                 {
-                                    var responses = responder.GetResponse(ircMessage.Message);
+                                    var responses = responder.GetResponse(ircMessage);
                                     if (responses != null)
                                     {
                                         foreach (var response in responses)

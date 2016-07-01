@@ -5,6 +5,6 @@ namespace IrcSomeBot.Responder
     public interface IResponder
     {
         bool HasResponse(string inputLine);
-        List<string> GetResponse(string inputLine);
+        List<string> GetResponse(IrcMessage ircMessage);
     }
 }
