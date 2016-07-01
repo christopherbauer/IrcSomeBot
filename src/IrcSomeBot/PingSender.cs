@@ -1,4 +1,6 @@
 ﻿
+using System;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 
 namespace IrcSomeBot
@@ -6,30 +8,31 @@ namespace IrcSomeBot
     /*
     * Class that sends PING to irc server every 15 seconds
     */
-    class PingSender
+
+    public class PingSender
     {
+        private readonly IOutputInterface _outputInterface;
         private readonly string _server;
-        static string PING = "PING :";
-        private Thread pingSender;
+        private readonly Thread _pingThread;
         // Empty constructor makes instance of Thread
-        public PingSender(string server)
+        public PingSender(IOutputInterface outputInterface, string server)
         {
+            _outputInterface = outputInterface;
             _server = server;
-            pingSender = new Thread(this.Run);
+            _pingThread = new Thread(this.Run);
         }
 
         // Starts the thread
         public void Start()
         {
-            pingSender.Start();
+            _pingThread.Start();
         }
         // Send PING to irc server every 15 seconds
         public void Run()
         {
             while (true)
             {
-                IrcBot.Writer.WriteLine(PING + _server);
-                IrcBot.Writer.Flush();
+                _outputInterface.WriteLine(string.Format("PING :{0}", _server));
                 Thread.Sleep(15000);
             }
         }

@@ -14,7 +14,7 @@ namespace IrcSomeBot
             }
             var protocolParts = inputParts[0].Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
             var logonDetails = protocolParts[0].Split(new [] {"!"},StringSplitOptions.RemoveEmptyEntries);
-            var messageType = protocolParts[1];
+            //var messageType = protocolParts[1];
             string target = null;
             if (protocolParts.Length == 3)
             {

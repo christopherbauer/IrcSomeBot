@@ -15,7 +15,7 @@ namespace IrcSomeBot.Responder
 
         public bool HasResponse(IrcMessage ircMessage)
         {
-            return ircMessage.Message.Contains("KICK") && ircMessage.Message.Contains(_username);
+            return ircMessage.Message != null && ircMessage.Message.Contains("KICK") && ircMessage.Message.Contains(_username);
         }
 
         public List<string> GetResponse(IrcMessage ircMessage)

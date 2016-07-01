@@ -13,15 +13,16 @@ namespace IrcSomeBot
         private readonly int _port;
         private readonly string _channel;
         private readonly string _username;
+        private readonly IOutputInterface _outputInterface;
         private readonly string _server;
         // User information defined in RFC 2812 (Internet Relay Chat: Client Protocol) is sent to irc server 
-        private const string User = "USER CSharpBot:I'm a C# irc bot";
+        private const string User = "USER IrcSomeBot:I'm an IRC bot";
         // StreamWriter is declared here so that PingSender can access it
-        public static StreamWriter Writer;
         private readonly IList<IResponder> _responders;
 
-        public IrcBot(string server, int port, string channel, string username)
+        public IrcBot(IOutputInterface outputInterface, string server, int port, string channel, string username)
         {
+            _outputInterface = outputInterface;
             _server = server;
             _port = port;
             _channel = channel;
@@ -31,6 +32,7 @@ namespace IrcSomeBot
 
         public void Initialize()
         {
+            Console.WriteLine("Initialize Connection");
             string inputLine = null;
 #if !DEBUG
             try
@@ -39,16 +41,13 @@ namespace IrcSomeBot
                 var irc = new TcpClient(_server, _port);
                 var stream = irc.GetStream();
                 var reader = new StreamReader(stream);
-                Writer = new StreamWriter(stream);
+                _outputInterface.SetInterface(new StreamWriter(stream));
                 // Start PingSender thread
-                var ping = new PingSender(_server);
+                var ping = new PingSender(_outputInterface, _server);
                 ping.Start();
-                Writer.WriteLine(User);
-                Writer.Flush();
-                Writer.WriteLine("NICK " + _username);
-                Writer.Flush();
-                Writer.WriteLine("JOIN " + _channel);
-                Writer.Flush();
+                _outputInterface.WriteLine(User);
+                _outputInterface.WriteLine("NICK " + _username);
+                _outputInterface.WriteLine("JOIN " + _channel);
                 while (true)
                 {
                     while ((inputLine = reader.ReadLine()) != null)
@@ -70,16 +69,15 @@ namespace IrcSomeBot
                                         {
                                             Console.WriteLine("Input: {0}", inputLine);
                                             Console.WriteLine("Response: {0}", response);
-                                            Writer.WriteLine(response);
+                                            _outputInterface.WriteLine(response);
                                         }
-                                        Writer.Flush();
                                     }
                                 }
                             }
                         }
                     }
                     // Close all streams
-                    Writer.Close();
+                    _outputInterface.Close();
                     reader.Close();
                     irc.Close();
                 }

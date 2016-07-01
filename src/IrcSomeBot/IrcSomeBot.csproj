@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IOutputInterface.cs" />
     <Compile Include="IrcBot.cs" />
     <Compile Include="IrcMessage.cs" />
     <Compile Include="PingSender.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Responder\YahooFinancial\YahooApiDatasource.cs" />
     <Compile Include="Responder\YahooFinancial\YahooFinanceApi.cs" />
     <Compile Include="Responder\YahooFinancial\YahooFinanceApiData.cs" />
+    <Compile Include="StreamWriterWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

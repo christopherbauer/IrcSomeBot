@@ -17,7 +17,7 @@ namespace IrcSomeBot
             var channel = reader.GetValue("channel", typeof(string)).ToString();
             var username = reader.GetValue("username", typeof(string)).ToString();
 
-            var bot = new IrcBot(server, port, channel, username);
+            var bot = new IrcBot(new StreamWriterWrapper(), server, port, channel, username);
             bot.LoadResponder(new TickerResponder(new YahooApiDatasource(), TimeSpan.FromSeconds(30), username, channel));
             bot.LoadResponder(new KickResponder(username, channel));
             bot.Initialize();
