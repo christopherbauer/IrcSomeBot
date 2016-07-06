@@ -38,7 +38,9 @@ namespace IrcSomeBot
             try
             {
 #endif
-                var irc = new TcpClient(_server, _port);
+            using (var irc = new TcpClient(_server, _port))
+            {
+
                 var stream = irc.GetStream();
                 var reader = new StreamReader(stream);
                 _outputInterface.SetInterface(new StreamWriter(stream));
@@ -81,6 +83,7 @@ namespace IrcSomeBot
                     reader.Close();
                     irc.Close();
                 }
+            }
 #if !DEBUG
             }
             catch (Exception ex)

@@ -6,13 +6,14 @@ namespace IrcSomeBot
     {
         public static IrcMessage ParseInput(string inputLine)
         {
-            var inputParts = inputLine.Split(new[] {" :"}, StringSplitOptions.RemoveEmptyEntries);
+            var messageIndicator = inputLine.IndexOf(" :", StringComparison.Ordinal);
+            var ircProtocol = inputLine.Substring(0, messageIndicator > -1 ? messageIndicator : inputLine.Length);
             string message = null;
-            if (inputParts.Length == 2)
+            if (messageIndicator > -1)
             {
-                message = inputParts[1];
+                message = inputLine.Substring(messageIndicator + 2);
             }
-            var protocolParts = inputParts[0].Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
+            var protocolParts = ircProtocol.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
             var logonDetails = protocolParts[0].Split(new [] {"!"},StringSplitOptions.RemoveEmptyEntries);
             //var messageType = protocolParts[1];
             string target = null;

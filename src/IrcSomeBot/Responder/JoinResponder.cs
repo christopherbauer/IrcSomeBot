@@ -8,8 +8,8 @@ namespace IrcSomeBot.Responder
         private const string CommandChannel = "!command channel";
 
         public bool HasResponse(IrcMessage ircMessage)
-        {
-            return ircMessage.Message.StartsWith(CommandChannel, StringComparison.CurrentCultureIgnoreCase);
+        { 
+            return ircMessage.Message != null && ircMessage.Message.StartsWith(CommandChannel, StringComparison.CurrentCultureIgnoreCase);
         }
 
         public List<string> GetResponse(IrcMessage ircMessage)
