@@ -5,7 +5,7 @@ namespace IrcSomeBot.Responder
 {
     public class JoinResponder : IResponder
     {
-        private const string CommandChannel = "!command channel";
+        private const string CommandChannel = "!channel";
 
         public bool HasResponse(IrcMessage ircMessage)
         { 
