@@ -57,7 +57,7 @@ namespace IrcSomeBot.Responder
                     _tickerTracker.Add(tickerTrackerRecord, requestTime);
                 }
 
-                foreach (var pricingData in _stockTickerDataSource.GetPricingData(ticker, requestTime))
+                foreach (var pricingData in _stockTickerDataSource.GetPricingData(ticker))
                 {
                     if (repeat)
                     {

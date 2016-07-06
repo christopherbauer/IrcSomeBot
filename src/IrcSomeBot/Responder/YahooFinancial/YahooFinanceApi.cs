@@ -15,7 +15,7 @@ namespace IrcSomeBot.Responder.YahooFinancial
             var tickerTransformed = string.Join("+", tickers);
             using (var client = new WebClient())
             {
-                var result = client.DownloadString(string.Format("http://finance.yahoo.com/d/quotes.csv?s={0}&f={1}", tickerTransformed, "snabopc1p2ghc8wvrl1"));
+                var result = client.DownloadString(string.Format("http://finance.yahoo.com/d/quotes.csv?s={0}&f={1}", tickerTransformed, "snabopc1p2ghc8wvrl1t1d1"));
                 return Parse(result);
             }
 
@@ -43,7 +43,9 @@ namespace IrcSomeBot.Responder.YahooFinancial
                     WeekRange52 = csv.GetField(11),
                     Volume = csv.GetField(12),
                     PE = csv.GetField(13),
-                    LastTradePrice = csv.GetField(14)
+                    LastTradePrice = csv.GetField(14),
+                    LastTradeTime = csv.GetField(15),
+                    LastTradeDate = csv.GetField(16)
                 };
                 //.Replace("\"", string.Empty);
                 prices.Add(p);

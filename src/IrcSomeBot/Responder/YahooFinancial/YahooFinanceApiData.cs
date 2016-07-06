@@ -17,5 +17,7 @@ namespace IrcSomeBot.Responder.YahooFinancial
         public string PE { get; set; }
         public string WeekRange52 { get; set; }
         public string LastTradePrice { get; set; }
+        public string LastTradeTime { get; set; }
+        public string LastTradeDate { get; set; }
     }
 }
