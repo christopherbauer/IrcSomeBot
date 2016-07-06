@@ -20,7 +20,7 @@ namespace IrcSomeBot.Responder
 
         public List<string> GetResponse(IrcMessage ircMessage)
         {
-            return new List<string> {string.Format("/j {0}", _channel)};
+            return new List<string> {string.Format("JOIN {0}", _channel)};
         }
     }
 }

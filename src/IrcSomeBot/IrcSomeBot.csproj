@@ -75,6 +75,7 @@
     <Compile Include="Responder\IResponder.cs" />
     <Compile Include="Responder\IStockTickerDataSource.cs" />
     <Compile Include="Responder\KickResponder.cs" />
+    <Compile Include="Responder\JoinResponder.cs" />
     <Compile Include="Responder\TickerResponder.cs" />
     <Compile Include="Responder\TickerTrackerRecord.cs" />
     <Compile Include="Responder\YahooFinancial\YahooApiDatasource.cs" />
@@ -84,6 +85,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Config\App.Release.config" />
+    <None Include="Config\App.Debug.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
@@ -100,6 +103,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>Powershell Copy-Item -Path "$(ProjectDir)Config\App.$(Configuration).config" -Destination "$(ProjectDir)\bin\$(Configuration)\IrcSomeBot.exe.config"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -20,6 +20,7 @@ namespace IrcSomeBot
             var bot = new IrcBot(new StreamWriterWrapper(), server, port, channel, username);
             bot.LoadResponder(new TickerResponder(new YahooApiDatasource(), TimeSpan.FromSeconds(30), username, channel));
             bot.LoadResponder(new KickResponder(username, channel));
+            bot.LoadResponder(new JoinResponder());
             bot.Initialize();
         }
     }

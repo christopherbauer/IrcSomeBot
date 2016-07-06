@@ -65,7 +65,7 @@ namespace IrcSomeBot.Responder
                     }
                     else
                     {
-                        responses.Add(string.Format(@"PRIVMSG {0} :{1}", @private ? ircMessage.Sender : _channel, pricingData));
+                        responses.Add(string.Format(@"PRIVMSG {0} :{1}", @private ? ircMessage.Sender : ircMessage.Target, pricingData));
                     }
                 }
             }
