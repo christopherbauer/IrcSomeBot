@@ -11,14 +11,14 @@ namespace IrcSomeBot
     {
         static void Main(string[] args)
         {
-            var reader = new AppSettingsReader();
-            var server = reader.GetValue("server", typeof(string)).ToString();
-            var port = Convert.ToInt32(reader.GetValue("port", typeof(int)));
-            var channel = reader.GetValue("channel", typeof(string)).ToString();
-            var username = reader.GetValue("username", typeof(string)).ToString();
+            var appSettingsSource = new AppSettingsSource();
+            var server = appSettingsSource.GetValue<string>("server");
+            var port = appSettingsSource.GetValue<int>("port");
+            var channel = appSettingsSource.GetValue<string>("channel");
+            var username = appSettingsSource.GetValue<string>("username");
 
             var bot = new IrcBot(new StreamWriterWrapper(), server, port, channel, username);
-            bot.LoadResponder(new TickerResponder(new YahooApiDatasource(), TimeSpan.FromSeconds(30), username, channel));
+            bot.LoadResponder(new QuoteResponder(new YahooApiDatasource(appSettingsSource),appSettingsSource, TimeSpan.FromSeconds(30), username, channel));
             bot.LoadResponder(new KickResponder(username, channel));
             bot.LoadResponder(new JoinResponder());
             bot.Initialize();

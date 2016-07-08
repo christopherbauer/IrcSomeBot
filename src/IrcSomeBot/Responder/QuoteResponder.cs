@@ -1,24 +1,39 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace IrcSomeBot.Responder
 {
-    public class TickerResponder : IResponder
+    public class QuoteResponder : IResponder
     {
         private readonly IStockTickerDataSource _stockTickerDataSource;
-        private readonly Dictionary<TickerTrackerRecord, DateTime> _tickerTracker;
+        private readonly ISettingsSource _settingsSource;
+        private Dictionary<TickerTrackerRecord, DateTime> _tickerTracker;
         private readonly TimeSpan _norepeat;
         private readonly string _username;
         private readonly string _channel;
+        private IDictionary<string,string> _tickerTransformDictionary;
 
-        public TickerResponder(IStockTickerDataSource stockTickerDataSource, TimeSpan norepeat, string username, string channel)
+        public QuoteResponder(IStockTickerDataSource stockTickerDataSource, ISettingsSource settingsSource, TimeSpan norepeat, string username, string channel)
         {
             _stockTickerDataSource = stockTickerDataSource;
             _norepeat = norepeat;
             _username = username;
             _channel = channel;
+            _settingsSource = settingsSource;
+            Initialize();
+        }
+
+        private void Initialize()
+        {
             _tickerTracker = new Dictionary<TickerTrackerRecord, DateTime>();
+            _tickerTransformDictionary = new Dictionary<string, string>();
+
+            var value = _settingsSource.GetValue<string>("quote-ticker-transforms");
+            var tickerTransforms = value.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var tickerTransform in tickerTransforms)
+            {
+                _tickerTransformDictionary.Add(tickerTransform.Split(':')[0], tickerTransform.Split(':')[1]);
+            }
         }
 
         public bool HasResponse(IrcMessage ircMessage)
@@ -29,6 +44,11 @@ namespace IrcSomeBot.Responder
         public List<string> GetResponse(IrcMessage ircMessage)
         {
             var ticker = ircMessage.Message.Substring(1);
+            if (_tickerTransformDictionary.ContainsKey(ticker))
+            {
+                ticker = _tickerTransformDictionary[ticker];
+            }
+
             var responses = new List<string>();
             if (string.IsNullOrWhiteSpace(ticker))
             {

@@ -71,9 +71,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppSettingsSource.cs" />
     <Compile Include="IOutputInterface.cs" />
     <Compile Include="IrcBot.cs" />
     <Compile Include="IrcMessage.cs" />
+    <Compile Include="ISettingsSource.cs" />
     <Compile Include="PingSender.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,7 +83,7 @@
     <Compile Include="Responder\IStockTickerDataSource.cs" />
     <Compile Include="Responder\KickResponder.cs" />
     <Compile Include="Responder\JoinResponder.cs" />
-    <Compile Include="Responder\TickerResponder.cs" />
+    <Compile Include="Responder\QuoteResponder.cs" />
     <Compile Include="Responder\TickerTrackerRecord.cs" />
     <Compile Include="Responder\YahooFinancial\YahooApiDatasource.cs" />
     <Compile Include="Responder\YahooFinancial\YahooFinanceApi.cs" />
