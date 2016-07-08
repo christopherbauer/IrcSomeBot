@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IrcSomeBot.Responder
 {
@@ -30,9 +31,12 @@ namespace IrcSomeBot.Responder
 
             var value = _settingsSource.GetValue<string>("quote-ticker-transforms");
             var tickerTransforms = value.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var tickerTransform in tickerTransforms)
+            if (tickerTransforms.Any())
             {
-                _tickerTransformDictionary.Add(tickerTransform.Split(':')[0], tickerTransform.Split(':')[1]);
+                foreach (var tickerTransform in tickerTransforms)
+                {
+                    _tickerTransformDictionary.Add(tickerTransform.Split(':')[0], tickerTransform.Split(':')[1]);
+                }
             }
         }
 

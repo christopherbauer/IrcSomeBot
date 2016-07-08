@@ -8,5 +8,7 @@
     <add key="port" value="port" />
     <add key="channel" value="home" />
     <add key="username" value="name" />
+    <add key="quote-ticker-transforms" value=""/>
+    <add key="quote-name-transforms" value=""/>
   </appSettings>
 </configuration>

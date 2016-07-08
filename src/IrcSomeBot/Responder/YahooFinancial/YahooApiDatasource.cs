@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IrcSomeBot.Responder.YahooFinancial
 {
@@ -21,9 +22,12 @@ namespace IrcSomeBot.Responder.YahooFinancial
             var value = _settingsSource.GetValue<string>("quote-name-transforms");
 
             var nameTransforms = value.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var nameTransform in nameTransforms)
+            if (nameTransforms.Any())
             {
-                _nameTransformDictionary.Add(nameTransform.Split(':')[0], nameTransform.Split(':')[1]);
+                foreach (var nameTransform in nameTransforms)
+                {
+                    _nameTransformDictionary.Add(nameTransform.Split(':')[0], nameTransform.Split(':')[1]);
+                }
             }
         }
 
